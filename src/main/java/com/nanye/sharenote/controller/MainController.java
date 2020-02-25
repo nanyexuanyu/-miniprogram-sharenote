@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +24,7 @@ public class MainController {
     @Autowired
     NoteMapper noteMapper;
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    //获取openid
     @GetMapping("/getOpenid")
     @ResponseBody
     public Map decodeUserInfo(String code) {
@@ -76,19 +78,10 @@ public class MainController {
         return map;
     }
 
+    //上传笔记
     @ResponseBody
     @GetMapping("/submit")
-    public int submit(String title, String category, String info, String createdTime, String nickName, String avatarUrl, String openid){
-        Note note = new Note();
-        note.setCategory(category);
-        note.setInfo(info);
-        note.setOpenid(openid);
-        note.setTitle(title);
-        note.setCreatedTime(createdTime);
-        note.setNickName(nickName);
-        note.setAvatarUrl(avatarUrl);
-
-
+    public int submitNote(Note note){
         System.out.println("submit成功");
         System.out.println(note);
         noteMapper.insertNote(note);
@@ -97,12 +90,58 @@ public class MainController {
         return note.getId();
     }
 
+    //查询我上传的笔记
     @ResponseBody
     @GetMapping("/myupload")
-    public List<Note> myupload(String openid){
+    public List<Note> myUpload(String openid){
         System.out.println(openid);
         List<Note> list = noteMapper.selectNoteByOpenid(openid);
         System.out.println(list);
+        return list;
+    }
+
+    //根据id查询笔记，并增加浏览数量
+    @ResponseBody
+    @GetMapping("/getNoteById")
+    public Note getNoteById(Integer id){
+        Note note = noteMapper.selectNoteById(id);
+        /*浏览量pageViews++*/
+        noteMapper.updatePageViewsById(id);
+        return note;
+    }
+
+    //查询所有上传的笔记
+    @ResponseBody
+    @GetMapping("/allupload")
+    public List<Note> allUpload(){
+        List<Note> list = noteMapper.selectAllNote();
+        System.out.println(list);
+        return list;
+    }
+
+    //删除我上传的笔记
+    @ResponseBody
+    @GetMapping("/deleteNote")
+    public Integer deleteNote(Integer id){
+        System.out.println(id);
+        return noteMapper.deleteNoteById(id);
+
+    }
+
+    //根据笔记id查询图片url
+    @ResponseBody
+    @GetMapping("/getImgUrlListById")
+    public List<String> getImgUrlListById(Integer id){
+        List<String> list = noteMapper.selectImgUrlListById(id);
+        System.out.println(list);
+        return list;
+    }
+
+    //查询笔记收藏前三甲
+    @ResponseBody
+    @GetMapping("/rankNotes")
+    public List<Note> rankNotes(){
+        List<Note> list = noteMapper.selectNotesByStar();
         return list;
     }
 

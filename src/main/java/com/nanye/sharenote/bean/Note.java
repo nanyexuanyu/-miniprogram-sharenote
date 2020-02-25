@@ -13,4 +13,5 @@ public class Note {
     private String nickName;
     private String avatarUrl;
     private String createdTime;
+    private Integer pageViews;
 }

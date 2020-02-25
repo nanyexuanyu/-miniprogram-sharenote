@@ -8,5 +8,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface ImgMapper {
 
     @Insert("insert into img(imageUrl, noteid) values(#{imageUrl}, #{noteid})")
-    public void insertImg(Img img);
+    void insertImg(Img img);
+
 }

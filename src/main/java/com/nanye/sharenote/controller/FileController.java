@@ -24,7 +24,7 @@ public class FileController {
     /**
      * 定义图片存放地址
      */
-    private String pathurl = "47.100.10.51:8080/";
+    private String pathurl = "https://nanyexuanyu.club/images/";
 
     /**
      * 上传图片
@@ -42,7 +42,8 @@ public class FileController {
         }
 
         String fileName = file.getOriginalFilename();
-        String filePath = "C:\\Users\\nanye\\Desktop\\test\\";
+//        String filePath = "C:\\Users\\nanye\\Desktop\\test\\";
+        String filePath = "/home/nginx01/sharenoteimages/images/";
         File dest = new File(filePath + fileName);
         try {
             file.transferTo(dest);
